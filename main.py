@@ -432,7 +432,7 @@ class Window(pyglet.window.Window):
         super(Window, self).__init__(*args, **kwargs)
 
         # Whether or not the window exclusively captures the mouse.
-        self.exclusive = False
+        super(Window, self).set_exclusive_mouse(False)
 
         # When flying gravity has no effect and speed is increased.
         self.flying = False
@@ -488,14 +488,6 @@ class Window(pyglet.window.Window):
         # This call schedules the `update()` method to be called
         # TICKS_PER_SEC. This is the main game event loop.
         pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SEC)
-
-    def set_exclusive_mouse(self, exclusive):
-        """ If `exclusive` is True, the game will capture the mouse, if False
-        the game will ignore the mouse.
-
-        """
-        super(Window, self).set_exclusive_mouse(exclusive)
-        self.exclusive = exclusive
 
     def get_sight_vector(self):
         """ Returns the current line of sight vector indicating the direction
@@ -673,8 +665,6 @@ class Window(pyglet.window.Window):
         elif symbol == key.SPACE:
             if self.dy == 0:
                 self.dy = JUMP_SPEED
-        elif symbol == key.ESCAPE:
-            self.set_exclusive_mouse(False)
         elif symbol == key.TAB:
             self.flying = not self.flying
         elif symbol in self.num_keys:
@@ -834,8 +824,6 @@ def setup():
 
 def main():
     window = Window(width=800, height=600, caption='Pyglet', resizable=True)
-    # Hide the mouse cursor and prevent the mouse from leaving the window.
-    window.set_exclusive_mouse(True)
     setup()
     pyglet.app.run()
 
